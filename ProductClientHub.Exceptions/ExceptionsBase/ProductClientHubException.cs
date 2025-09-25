@@ -1,4 +1,5 @@
-﻿using System.Reflection.Metadata;
+﻿using System.Net;
+using System.Reflection.Metadata;
 
 namespace ProductClientHub.Exceptions.ExceptionsBase
 {
@@ -8,6 +9,7 @@ namespace ProductClientHub.Exceptions.ExceptionsBase
         {
         }
         public abstract List<string> GetErrors();
+        public abstract HttpStatusCode GetHttpStatusCode();
 
     }
 }
