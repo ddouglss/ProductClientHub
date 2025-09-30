@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProductClientHub.API.UseCases.Clients.GetAll;
 using ProductClientHub.API.UseCases.Clients.Register;
 using ProductClientHub.Communication.Requests;
 using ProductClientHub.Communication.Responses;
 
+
+// Função do nosso controller é receber a (Request) requisição, e passar para a regra de negócio (useCase)o caso de uso e devolver a resposta
 namespace ProductClientHub.API.Controllers
 {
     [Route("api/[controller]")]
@@ -10,7 +13,7 @@ namespace ProductClientHub.API.Controllers
     public class ClientController : ControllerBase
     {
         [HttpPost]
-        [ProducesResponseType(typeof(ResponseClientJson), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ResponseShortClientJson), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ResponseErrorMessagesJson), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ResponseErrorMessagesJson), StatusCodes.Status500InternalServerError)]
         public IActionResult Register([FromBody] ResquestClientJson resquest) 
@@ -31,9 +34,17 @@ namespace ProductClientHub.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(ResponseAllClientJson), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public IActionResult GetAll() 
         { 
-            return Ok();
+            var useCase = new GetAllClientsUseCase();
+            var response = useCase.Execute();
+            if(response.Clients.Count == 0) //retorna 204 No Content (Não tem conteudo nenhum)
+            {
+                return NoContent();
+            }
+            return Ok(response);
         }
 
         [HttpGet]
